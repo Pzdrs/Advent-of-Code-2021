@@ -1,4 +1,4 @@
-import java.util.regex.Pattern;
+import java.util.Arrays;
 
 public class BingoBoard {
     private int[][] board;
@@ -46,5 +46,17 @@ public class BingoBoard {
             if (columnCompleted) return true;
         }
         return false;
+    }
+
+    public boolean[][] getMarked() {
+        return marked;
+    }
+
+    @Override
+    public String toString() {
+        return "BingoBoard{" +
+                "board=" + Arrays.deepToString(board) +
+                "marked=" + Arrays.deepToString(marked) +
+                '}';
     }
 }

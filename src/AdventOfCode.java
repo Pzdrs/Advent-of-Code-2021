@@ -1,20 +1,20 @@
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class AdventOfCode {
     public static void main(String[] args) {
-        int[] randomNumbers = getRandomNumbers();
         List<BingoBoard> bingoBoards = loadBingoBoards();
-        for (int randomNumber : randomNumbers) {
-            for (BingoBoard bingoBoard : bingoBoards) {
-                bingoBoard.mark(randomNumber);
-                if (bingoBoard.checkWin()) {
-                    System.out.println(bingoBoard.sumOfUnmarked() * randomNumber);
-                    return;
+        for (int randomNumber : getRandomNumbers()) {
+            Iterator<BingoBoard> iterator = bingoBoards.iterator();
+            while (iterator.hasNext()) {
+                BingoBoard currentBoard = iterator.next();
+                currentBoard.mark(randomNumber);
+                if (currentBoard.checkWin()) {
+                    if (bingoBoards.size() == 1) {
+                        System.out.println(bingoBoards.get(0).sumOfUnmarked() * randomNumber);
+                        return;
+                    } else iterator.remove();
                 }
             }
         }
