@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class AdventOfCode {
-    static int horizontalPos = 0, depth = 0;
+    static int horizontalPos = 0, depth = 0, aim = 0;
 
     public static void main(String[] args) {
         Arrays.stream(getCommands()).forEach(AdventOfCode::processCommand);
@@ -30,9 +30,12 @@ public class AdventOfCode {
 
     public static void processCommand(Command command) {
         switch (command.direction()) {
-            case "up" -> depth -= command.step();
-            case "down" -> depth += command.step();
-            case "forward" -> horizontalPos += command.step();
+            case "up" -> aim -= command.step();
+            case "down" -> aim += command.step();
+            case "forward" -> {
+                horizontalPos += command.step();
+                depth += aim * command.step();
+            }
         }
     }
 }
