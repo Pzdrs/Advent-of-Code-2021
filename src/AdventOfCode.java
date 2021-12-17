@@ -1,15 +1,16 @@
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class AdventOfCode {
+    static int horizontalPos = 0, depth = 0;
+
     public static void main(String[] args) {
-        Command[] commands = getCommands();
-        for (Command command : commands) {
-            System.out.println(command);
-        }
+        Arrays.stream(getCommands()).forEach(AdventOfCode::processCommand);
+        System.out.println(horizontalPos * depth);
     }
 
     public static Command[] getCommands() {
@@ -25,5 +26,13 @@ public class AdventOfCode {
             e.printStackTrace();
         }
         return commands.toArray(new Command[0]);
+    }
+
+    public static void processCommand(Command command) {
+        switch (command.direction()) {
+            case "up" -> depth -= command.step();
+            case "down" -> depth += command.step();
+            case "forward" -> horizontalPos += command.step();
+        }
     }
 }
