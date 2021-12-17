@@ -1,41 +1,64 @@
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Scanner;
+import java.util.*;
 
 public class AdventOfCode {
     public static void main(String[] args) {
-        int gammaRate, epsilonRate;
-        StringBuilder gamma = new StringBuilder();
-        for (int i = 0; i < 12; i++) {
-            int mostCommonBit = getMostCommonBit(getAmounts(i));
-            gamma.append(mostCommonBit);
+        List<String> numbers = getNumbers();
+        if (numbers != null) {
+            System.out.println(Integer.parseInt(filterOxygenGenerator(new ArrayList<>(numbers)), 2) *
+                    Integer.parseInt(filterCO2Scrubber(new ArrayList<>(numbers)), 2));
         }
-        gammaRate = Integer.parseInt(gamma.toString(), 2);
-
-        StringBuilder epsilon = new StringBuilder();
-        for (int i = 0; i < 12; i++) {
-            int leastCommonBit = getLeastCommonBit(getAmounts(i));
-            epsilon.append(leastCommonBit);
-        }
-        epsilonRate = Integer.parseInt(epsilon.toString(), 2);
-
-        System.out.println(epsilonRate * gammaRate);
     }
 
-    public static int[] getAmounts(int n) {
+    public static String filterOxygenGenerator(List<String> numbers) {
+        int n = 0;
+        while (numbers.size() > 1) {
+            int[] amounts = getAmounts(numbers, n);
+            Iterator<String> iterator = numbers.iterator();
+            while (iterator.hasNext())
+                if (iterator.next().substring(n, n + 1).equals(String.valueOf(amounts[0] == amounts[1] ? 0 : getLeastCommonBit(amounts))))
+                    iterator.remove();
+            n++;
+        }
+        return numbers.get(0);
+    }
+
+    public static String filterCO2Scrubber(List<String> numbers) {
+        int n = 0;
+        while (numbers.size() > 1) {
+            int[] amounts = getAmounts(numbers, n);
+            Iterator<String> iterator = numbers.iterator();
+            while (iterator.hasNext())
+                if (iterator.next().substring(n, n + 1).equals(String.valueOf(amounts[0] == amounts[1] ? 1 : getMostCommonBit(amounts))))
+                    iterator.remove();
+            n++;
+        }
+        return numbers.get(0);
+    }
+
+    public static List<String> getNumbers() {
         try {
-            int ones = 0, zeros = 0;
+            List<String> numbers = new ArrayList<>();
             Scanner scanner = new Scanner(new FileReader("src/data.txt"));
             while (scanner.hasNextLine()) {
-                int currentBit = Integer.parseInt(String.valueOf(scanner.nextLine().toCharArray()[n]));
-                if (currentBit == 0) zeros++;
-                else ones++;
+                numbers.add(scanner.nextLine());
             }
-            return new int[]{zeros, ones};
+            return numbers;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        return new int[]{-1, -1};
+        return null;
+    }
+
+    public static int[] getAmounts(List<String> numbers, int n) {
+        int ones = 0, zeros = 0;
+        for (String number : numbers) {
+            int currentBit = Integer.parseInt(String.valueOf(number.toCharArray()[n]));
+            if (currentBit == 0) zeros++;
+            else ones++;
+        }
+        return new int[]{zeros, ones};
     }
 
     public static int getMostCommonBit(int[] amounts) {
