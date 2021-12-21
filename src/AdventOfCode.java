@@ -18,8 +18,29 @@ public class AdventOfCode {
                 for (int i = Math.min(line.x1(), line.x2()); i <= Math.max(line.x1(), line.x2()); i++) {
                     map[line.y1()][i] = map[line.y1()][i] + 1;
                 }
+            } else {
+                int x1 = Math.min(line.x1(), line.x2());
+                int y1 = line.getYByX(x1);
+                int x2 = Math.max(line.x1(), line.x2());
+                int y2 = line.getYByX(x2);
+                int counter = 0;
+                for (int i = x1; i <= x2; i++) {
+                    if (y1 > y2) {
+                        map[y1 - counter][i] = map[y1 - counter][i] + 1;
+                    } else {
+                        map[y1 + counter][i] = map[y1 + counter][i] + 1;
+                    }
+                    counter++;
+                }
             }
         }
+        /*for (int[] ints : map) {
+            for (int anInt : ints) {
+                if (anInt == 0) System.out.print(".");
+                else System.out.print(anInt);
+            }
+            System.out.println();
+        }*/
         System.out.println(getOverlapAmount(map));
     }
 

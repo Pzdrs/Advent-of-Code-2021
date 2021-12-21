@@ -5,4 +5,11 @@ public record Line(int x1, int y1, int x2, int y2) {
         this.x2 = x2;
         this.y2 = y2;
     }
+
+    public int getYByX(int x) {
+        if (x == x1) {
+            return y1;
+        }
+        return y2;
+    }
 }
