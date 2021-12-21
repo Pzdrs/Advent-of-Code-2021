@@ -14,7 +14,11 @@ public class AdventOfCode {
         for (int i = Arrays.stream(crabs).min().getAsInt(); i < Arrays.stream(crabs).max().getAsInt(); i++) {
             int fuelNeeded = 0;
             for (int crab : crabs) {
-                fuelNeeded += Math.abs(crab - i);
+                int multiplier = 1;
+                for (int step = 0; step < Math.abs(crab - i); step++) {
+                    fuelNeeded += multiplier;
+                    multiplier++;
+                }
             }
             fuel.add(fuelNeeded);
         }
