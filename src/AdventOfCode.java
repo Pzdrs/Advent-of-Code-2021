@@ -1,34 +1,32 @@
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class AdventOfCode {
-    public static void main(String[] args) {
-        List<LanternFish> lanternFish = loadInitial();
 
-        System.out.println("Initial state: " + lanternFish);
-        for (int i = 0; i < 80; i++) {
-            for (int fishIndex = 0; fishIndex < lanternFish.size(); fishIndex++) {
-                LanternFish fish = lanternFish.get(fishIndex);
-                fish.decreaseTimer();
-                if (fish.getTimer() == -1) {
-                    fish.resetTimer();
-                    lanternFish.add(new LanternFish());
-                }
-            }
+    public static void main(String[] args) {
+        Map<Integer, Long> fish = loadInitial();
+
+        for (int i = 0; i < 256; i++) {
+            for (int fishTimer = 0; fishTimer <= 8; fishTimer++)
+                fish.put(fishTimer - 1, fish.getOrDefault(fishTimer, 0L));
+            fish.put(6, fish.getOrDefault(6, 0L) + fish.get(-1));
+            fish.put(8, fish.remove(-1));
         }
-        System.out.println(lanternFish.size());
+        long sum = 0;
+        for (Long value : fish.values()) {
+            sum += value;
+        }
+        System.out.println(sum);
     }
 
-    public static List<LanternFish> loadInitial() {
-        List<LanternFish> initial = new ArrayList<>();
+    public static Map<Integer, Long> loadInitial() {
+        Map<Integer, Long> initial = new HashMap<>();
         try {
             Scanner scanner = new Scanner(new FileReader("src/data.txt"));
             String[] fish = scanner.next().split(",");
             for (String s : fish) {
-                initial.add(new LanternFish(Integer.parseInt(s)));
+                initial.put(Integer.parseInt(s), initial.getOrDefault(Integer.parseInt(s), 0L) + 1);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
